@@ -94,7 +94,7 @@ init -1 python:
 
                 for line in logical_lines:
                     for item in defaults_with_type_comments:
-                        if item.varname == line.strip():
+                        if item.varname in line.split(' '):
                             current_type = item.check_reasign_via_equals_sign(line, node)
                             if current_type != item.type:
                                 print(type_mismatch_message(item, current_type, node))
