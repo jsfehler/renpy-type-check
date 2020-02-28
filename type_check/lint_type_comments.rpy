@@ -6,8 +6,8 @@ init -1 python:
     TYPE_COMMENT_REGEX = re.compile(r"\s*# type:(.*)")
 
 
-    def execute_defaults(statements):
-        """Execute default statements and collect their nodes in a list.
+    def get_defaults(statements):
+        """Gather default statements and collect their nodes in a list.
 
         Arguments:
             statements (list)
@@ -21,8 +21,6 @@ init -1 python:
         # Gather defaults (No distinction for special namespaces)
         for node in statements:
             if isinstance(node, renpy.ast.Default):
-                node.execute()
-
                 # Ignore engine code in the renpy directory
                 if not node.filename.startswith('renpy/'):
                     defaults.append(VariableInfo(node))
@@ -69,8 +67,9 @@ init -1 python:
         all_statements = renpy.game.script.all_stmts
 
         # Execute default statements so they can be checked for reassignment
-        defaults = execute_defaults(all_statements)
+        defaults = get_defaults(all_statements)
         defaults_with_type_comments = get_defaults_with_type_comments(defaults)
+        # TODO: Warn if untyped
 
         # Scan the statements for any reassignment of the defaults
         for node in all_statements:
