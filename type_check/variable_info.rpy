@@ -66,7 +66,7 @@ init -2 python:
                 )
                 return current_type
             return self.type
-            
+
 
     def check_reassigned_variable_type(node, line, varname):
         """Evaluate line and see what the type of the variable is.
@@ -86,10 +86,7 @@ init -2 python:
         # Evaluate entire block of code
         except Exception as e:
             c = check_line.format(node.code.source, name)
-            try:
-                exec(c)
-            except:
-                pass
+            exec(c)
 
         return current_type
 
@@ -111,11 +108,7 @@ init -2 python:
             exec(c)
         # Evaluate entire block of code
         except Exception as e:
-            raise Exception(e)
             c = check_line.format(node.code.source, name)
-            try:
-                exec(c)
-            except:
-                raise Exception(c)
+            exec(c)
 
         return current_type
