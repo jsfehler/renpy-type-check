@@ -72,9 +72,9 @@ init -1 python:
         defaults_with_type_comments = get_defaults_with_type_comments(defaults)
 
         if warn_if_untyped:
-            for d in defaults:
-                if d not in defaults_with_type_comments:
-                    print("Warning: {} is untyped.".format(d.varname))
+            untyped_defaults = [i for i in defaults if i not in defaults_with_type_comments]
+            for d in untyped_defaults:
+                print("Warning: {} is untyped.".format(d.varname))
 
         # Scan the statements for any reassignment of the defaults
         for node in all_statements:
