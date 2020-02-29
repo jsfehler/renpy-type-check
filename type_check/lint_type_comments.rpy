@@ -5,6 +5,7 @@ init -1 python:
     # Checks for the 'type:' declaration
     TYPE_COMMENT_REGEX = re.compile(r"\s*# type:(.*)")
 
+    warn_if_untyped = True
 
     def get_defaults(statements):
         """Gather default statements and collect their nodes in a list.
@@ -69,12 +70,15 @@ init -1 python:
         # Execute default statements so they can be checked for reassignment
         defaults = get_defaults(all_statements)
         defaults_with_type_comments = get_defaults_with_type_comments(defaults)
-        # TODO: Warn if untyped
+
+        if warn_if_untyped:
+            for d in defaults:
+                if d not in defaults_with_type_comments:
+                    print("Warning: {} is untyped.".format(d.varname))
 
         # Scan the statements for any reassignment of the defaults
         for node in all_statements:
             if isinstance(node, renpy.ast.Screen):
-                node.execute()
                 # TODO: Scan python in screens
                 #if node.screen.const_ast.has_python:
                 n = node.screen.const_ast
@@ -88,7 +92,7 @@ init -1 python:
                                         if current_type != item.type:
                                             print(type_mismatch_message(item, current_type, node))
                                             break
-                    
+
             if isinstance(node, renpy.ast.Python):
                 logical_lines = node.code.source.split('\n')
 
